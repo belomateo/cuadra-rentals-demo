@@ -1,0 +1,7 @@
+/* Integraciones: cuadradito con ícono o inicial, y el detalle del modal */
+.int-ico{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:var(--hielo);color:var(--noche);font-weight:700;font-size:14px;flex:none}
+.int-cab{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.int-cab h3{margin-bottom:2px}
+.int-sub{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.int-bloque{margin-bottom:14px}
+.int-et{display:block;font-size:12.5px;font-weight:600;color:var(--noche-2);margin-bottom:2px}

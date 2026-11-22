@@ -1,0 +1,6 @@
+/* Clientes: solo lo que el sistema visual no trae */
+.cli-sirve{margin-top:12px;color:var(--noche-3)}
+.cli-filtros{padding:4px 20px 12px;overflow-x:auto;scrollbar-width:none}
+.cli-pub-num{margin:14px 0 8px}
+.cli-pub-txt{padding:12px;border-radius:var(--r-s);background:var(--hielo);font-size:13.5px;margin-bottom:14px}
+@media (max-width:820px){.cli-filtros{padding:4px 16px 12px}}

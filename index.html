@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Cuadra · Rentals</title>
+<link rel="icon" href="assets/cuadra-rentals-isotipo-color.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Instrument+Sans:wght@400;500;600;700&family=Work+Sans:wght@700&display=swap">
+<link rel="stylesheet" href="estilos.css">
+<link rel="stylesheet" href="secciones/inicio.css">
+<link rel="stylesheet" href="secciones/reservas.css">
+<link rel="stylesheet" href="secciones/stock.css">
+<link rel="stylesheet" href="secciones/taller.css">
+<link rel="stylesheet" href="secciones/garantias.css">
+<link rel="stylesheet" href="secciones/caja.css">
+<link rel="stylesheet" href="secciones/clientes.css">
+<link rel="stylesheet" href="secciones/equipo.css">
+<link rel="stylesheet" href="secciones/integraciones.css">
+<link rel="stylesheet" href="secciones/configuracion.css">
+</head>
+<body>
+<div class="app">
+  <aside class="lateral">
+    <div class="marca-app"><span id="logo"></span></div>
+    <nav id="nav" aria-label="Secciones"></nav>
+    <div class="pie-lateral">
+      <label class="ver-como">Ver como<select id="rol"></select></label>
+      <div class="usuario" id="usuario"></div>
+      <button class="reiniciar" id="reiniciar">Volver a los datos de ejemplo</button>
+    </div>
+  </aside>
+  <header class="barra">
+    <span class="logo-movil" id="logo-movil"></span>
+    <select class="rol-movil" id="rol-movil" aria-label="Ver como"></select>
+    <form class="buscar" id="buscar" role="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" autocomplete="off" placeholder="Número de tabla, grupo o cliente" aria-label="Buscar">
+      <button type="button" class="escanear" data-accion="escanear" aria-label="Escanear etiqueta"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M7 12h10"/></svg><span>Escanear</span></button>
+    </form>
+    <span class="fecha" id="fecha"></span>
+  </header>
+  <main id="vista" tabindex="-1"></main>
+  <nav class="nav-movil" id="nav-movil" aria-label="Secciones"></nav>
+</div>
+<div id="capa"></div>
+<div id="aviso" role="status" aria-live="polite"></div>
+<script src="datos.js"></script>
+<script src="nucleo.js"></script>
+<script src="secciones/inicio.js"></script>
+<script src="secciones/reservas.js"></script>
+<script src="secciones/stock.js"></script>
+<script src="secciones/taller.js"></script>
+<script src="secciones/garantias.js"></script>
+<script src="secciones/caja.js"></script>
+<script src="secciones/clientes.js"></script>
+<script src="secciones/equipo.js"></script>
+<script src="secciones/integraciones.js"></script>
+<script src="secciones/configuracion.js"></script>
+<script>CUADRA.iniciar();</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+/* Stock en vivo: solo lo que el sistema visual no trae */
+.stk-cant{display:inline-flex;align-items:center;gap:6px;min-width:44px;justify-content:flex-end}
+.stk-barra{margin-top:6px;max-width:320px}
+.stk-err{grid-column:1/-1;color:var(--alerta);font-size:13px}
+.stk-err:empty{display:none}
+.stk-em{display:none}
+@media (max-width:820px){
+  /* en celular el estado pasa a la línea de abajo y el botón queda al lado de la placa */
+  .stk-f{flex-wrap:nowrap}
+  .stk-f .lado{display:none}
+  .stk-f .acc{flex-basis:auto}
+  .stk-em{display:inline}
+}
