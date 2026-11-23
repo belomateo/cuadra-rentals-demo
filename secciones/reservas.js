@@ -86,7 +86,7 @@
     if (abierto) {
       if (multi) html += `<div class="res-nota">${C.nota(`Van en días distintos: quedan en ${rs.length} reservas del mismo grupo.`)}</div>`;
       html += rs.map((r) => (multi ? `<div class="res-tramo">${esc(r.desde)} al ${esc(r.hasta)} · ${nPers(r.personas.length)}</div>` : '')
-        + r.personas.map((p, k) => filaPersona(r, p, k)).join('')).join('');
+        + r.personas.map((p, k) => filaPersona(r, p, k)).join('') + filaExtras(r)).join('');
     }
     return html;
   }
@@ -121,6 +121,64 @@
     const r = C.reserva(d.r), p = r && r.personas[+d.k];
     if (!p || !C.puede('asignar')) return;
     C.firmar(r.id, +d.k); C.render(); C.aviso(`${C.primerNombre(p.nombre)} firmó el contrato`);
+  };
+
+  // ---------- Extras: lo que se llevan de más en el local, con el total al instante (no en comentarios) ----------
+  const puedeSumar = () => C.puede('asignar') || C.puede('reservar');
+  const alquiler = (r) => r.personas.reduce((s, p) => s + C.montoPersona(r, p), 0);
+  const unidad = (x) => (x.por === 'día' ? 'por día' : 'cada una');
+  function filaExtras(r) {
+    const ex = r.extras || [];
+    return C.fila({
+      cls: 'sub', lead: `<span class="res-ex-ic">${C.icono('mas', 16)}</span>`, titulo: 'Extras',
+      meta: ex.length ? esc(ex.map((x) => x.nombre + (x.cant > 1 ? ` ×${x.cant}` : '')).join(' · ')) : 'Nada sumado todavía',
+      lado: `<span class="num"><b>${C.plata(C.montoReserva(r))}</b><span class="muted"> total</span></span>`,
+      acc: puedeSumar() && r.estado !== 'devuelta' ? C.btn('Sumar', { accion: 'res-extras', tipo: 'sec', chico: true, data: { r: r.id } }) : ''
+    });
+  }
+  function modalExtras(rid, foco) {
+    const r = C.reserva(rid), g = r && C.grupo(r.grupo); if (!r) return;
+    const ex = r.extras || [], suma = ex.reduce((s, x) => s + C.montoExtra(r, x), 0);
+    const filas = ex.map((x, i) => C.fila({
+      titulo: esc(x.nombre), meta: `${C.plata(x.precio)} ${unidad(x)}${x.por === 'día' ? ` · ${r.dias} días` : ''}`,
+      lado: `<span class="num">${C.plata(C.montoExtra(r, x))}</span>`,
+      acc: `<span class="res-ex-cant">${C.btn('−', { accion: 'res-extra-menos', tipo: 'sec', chico: true, data: { r: r.id, i } })}<b class="num">${x.cant}</b>${C.btn('+', { accion: 'res-extra-mas', tipo: 'sec', chico: true, data: { r: r.id, i } })}</span>`
+    })).join('');
+    C.modal(`<h3>Sumar a la reserva</h3><p class="modal-sub">${esc(g ? g.nombre : 'Reserva')} · ${esc(r.desde)} al ${esc(r.hasta)} · ${r.dias} días</p>
+      <div class="res-ex-total"><span>Total de la reserva</span><b class="num">${C.plata(C.montoReserva(r))}</b>
+        <span class="muted">Alquiler ${C.plata(alquiler(r))} + extras ${C.plata(suma)}</span></div>
+      <div class="res-ex-chips">${D.extras.map((x) => `<button type="button" data-accion="res-extra-mas" data-r="${esc(r.id)}" data-id="${x.id}"><b>+ ${esc(x.nombre)}</b><span>${C.plata(x.precio)} ${unidad(x)}</span></button>`).join('')}</div>
+      ${filas ? `<div class="lista res-modal-lista">${filas}</div>` : ''}
+      <form id="res-form-extra" class="form" novalidate><input type="hidden" name="r" value="${esc(r.id)}">
+        ${campo('Otra cosa', (id) => `<input id="${id}" name="nombre" maxlength="40" placeholder="Ej: Campera" autocomplete="off">`)}
+        ${campo('Precio total', (id) => `<input id="${id}" name="precio" inputmode="numeric" maxlength="9" placeholder="Ej: 20000" autocomplete="off">`)}
+        <div class="campo ancho"><span class="error" id="res-err-ex" role="alert"></span></div>
+        <div class="acciones">${C.btn('Sumar otra cosa', { submit: true, tipo: 'sec' })}<button type="button" class="btn" data-cerrar>Listo</button></div></form>`);
+    // vuelve a enfocar el botón que se tocó (el modal se redibuja con cada toque)
+    const b = foco && document.querySelector(`#capa [data-accion="${foco[0]}"][data-${foco[1]}="${foco[2]}"]`); if (b) b.focus();
+  }
+  const cambioExtras = (r, txt, foco) => { C.guardar(); C.render(); modalExtras(r.id, foco); C.aviso(`${txt} · total ${C.plata(C.montoReserva(r))}`); };
+  C.acciones['res-extras'] = (d) => { if (puedeSumar()) modalExtras(d.r); };
+  C.acciones['res-extra-mas'] = (d) => {
+    const r = C.reserva(d.r); if (!r || !puedeSumar()) return;
+    r.extras = r.extras || [];
+    let x = d.i != null ? r.extras[+d.i] : r.extras.find((y) => y.id === d.id);
+    if (!x) { const base = D.extras.find((y) => y.id === d.id); if (!base) return; x = Object.assign({ cant: 0 }, base); r.extras.push(x); }
+    x.cant++; cambioExtras(r, `${x.nombre} sumado`, d.i != null ? ['res-extra-mas', 'i', d.i] : ['res-extra-mas', 'id', d.id]);
+  };
+  C.acciones['res-extra-menos'] = (d) => {
+    const r = C.reserva(d.r), x = r && (r.extras || [])[+d.i]; if (!x || !puedeSumar()) return;
+    x.cant--; if (x.cant <= 0) r.extras.splice(+d.i, 1);
+    cambioExtras(r, `${x.nombre} ${x.cant > 0 ? 'restado' : 'quitado'}`, x.cant > 0 ? ['res-extra-menos', 'i', d.i] : null);
+  };
+  C.formularios['res-form-extra'] = (fd) => {
+    const r = C.reserva(String(fd.get('r'))), el = document.querySelector('#res-err-ex'), fallo = (t) => { if (el) el.textContent = t; };
+    if (!r || !puedeSumar()) return;
+    const nombre = String(fd.get('nombre') || '').trim().replace(/\s+/g, ' '), precio = String(fd.get('precio') || '').replace(/[.\s$]/g, '');
+    if (nombre.length < 2) return fallo('Escribí qué se lleva (por ejemplo «Campera»).');
+    if (!/^\d{1,8}$/.test(precio) || +precio <= 0) return fallo('Poné el precio en pesos, solo números (por ejemplo 20000).');
+    (r.extras = r.extras || []).push({ id: 'otro' + Date.now(), nombre, precio: +precio, por: 'una', cant: 1 });
+    cambioExtras(r, `${nombre} sumado`);
   };
 
   // Asignar una tabla: las libres de su gama y tipo, o escribir el número

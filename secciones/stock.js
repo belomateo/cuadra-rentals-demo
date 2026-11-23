@@ -19,33 +19,39 @@
   }
 
   // ---------- En vivo ----------
+  // Cada estado en su casilla (pedido de un rental, 23/11): si las libres van mezcladas entre las ocupadas, se pierden
+  const CASILLAS = [['disponible', 'Libres', 'Ninguna libre con este filtro.'], ['alquilado', 'Alquiladas', 'Ninguna alquilada con este filtro.'],
+    ['taller', 'En el taller', 'Nada en el taller con este filtro.']];
   function vivo() {
     const u = S.ui, c = C.contar();
     const gama = u.stkGama || 'todas', est = u.stkEstado || 'todas', texto = String(u.buscaStock || '');
     const q = C.norm(texto).replace(/^#/, '').trim();
-    const lista = S.equipos.filter((e) => (gama === 'todas' || e.gama === gama) && (est === 'todas' || e.estado === est)
+    const base = S.equipos.filter((e) => (gama === 'todas' || e.gama === gama)
       && (!q || String(e.n).includes(q) || C.norm(`${e.marca} ${e.modelo}`).includes(q))).sort((a, b) => a.n - b.n);
-    // Con otro filtro o búsqueda, vuelve a mostrar las primeras 30
-    const clave = [gama, est, q].join('|');
-    const n = u.stkMas && u.stkMas.c === clave ? u.stkMas.n : PAGINA;
-    const filas = lista.slice(0, n).map((e) => C.fila({
-      cls: 'stk-f', lead: C.placa(e.n),
-      titulo: `${esc(e.marca)} ${esc(e.modelo)} · ${e.largo} cm`,
-      meta: `<span class="stk-em">${C.estadoEquipo(e)} · </span>${esc(e.tipo)} · ${donde(e)}`,
-      lado: C.estadoEquipo(e),
-      acc: C.btn('Ver', { accion: 'abrir-tabla', tipo: 'sec', chico: true, data: { n: e.n } })
-    })).join('');
+    const casillas = CASILLAS.filter(([k]) => est === 'todas' || est === k).map(([k, titulo, vacio]) => {
+      const lista = base.filter((e) => e.estado === k);
+      // cada casilla muestra 30 y crece con «Ver más»; con otro filtro o búsqueda vuelve a 30
+      const clave = [gama, k, q].join('|');
+      const n = (u.stkMas && u.stkMas[clave]) || PAGINA;
+      const filas = lista.slice(0, n).map((e) => C.fila({
+        cls: 'stk-f', lead: C.placa(e.n),
+        titulo: `${esc(e.marca)} ${esc(e.modelo)} · ${e.largo} cm`,
+        meta: `${esc(e.tipo)} · ${donde(e)}`,
+        lado: C.estadoEquipo(e),
+        acc: C.btn('Ver', { accion: 'abrir-tabla', tipo: 'sec', chico: true, data: { n: e.n } })
+      })).join('');
+      return C.panel({
+        titulo, sub: `${lista.length}`, sinPad: true,
+        cuerpo: (filas || C.vacio(vacio))
+          + (lista.length > n ? `<button type="button" class="mas-link" data-accion="stk-mas" data-c="${esc(clave)}" data-n="${n + PAGINA}">Ver más (quedan ${lista.length - n})</button>` : '')
+      });
+    }).join('');
     return C.kpis([{ l: 'Libres', v: c.disponible, tono: 'ok' }, { l: 'Alquiladas', v: c.alquilado }, { l: 'En el taller', v: c.taller }, { l: 'Total', v: c.total }])
       + `<div class="filtros">
         ${C.segmento('stkGama', gama, [['todas', 'Todas'], ...D.gamas.map((g) => [g.id, C.marca(g.id)])])}
         ${C.segmento('stkEstado', est, [['todas', 'Todas'], ['disponible', 'Libres'], ['alquilado', 'Alquiladas'], ['taller', 'En el taller']])}
         <input class="busca-chica" id="busca-stock" data-busca="buscaStock" value="${esc(texto)}" placeholder="Número o marca" aria-label="Buscar tabla por número o marca" autocomplete="off">
-      </div>`
-      + C.panel({
-        titulo: 'Tablas', sub: `${lista.length} de ${c.total}`, sinPad: true,
-        cuerpo: (filas || C.vacio('No hay tablas con ese filtro.'))
-          + (lista.length > n ? `<button type="button" class="mas-link" data-accion="stk-mas" data-c="${esc(clave)}" data-n="${n + PAGINA}">Ver más (quedan ${lista.length - n})</button>` : '')
-      });
+      </div>` + casillas;
   }
 
   // ---------- Depósito ----------
@@ -96,7 +102,7 @@
   C.cab.stock = () => (C.puede('configurar') ? C.btn('Dar de alta una tabla', { accion: 'stk-alta', icono: 'mas' }) : '');
 
   // ---------- Acciones y formularios ----------
-  C.acciones['stk-mas'] = (d) => { S.ui.stkMas = { c: d.c, n: +d.n }; C.guardar(); C.render(); };
+  C.acciones['stk-mas'] = (d) => { S.ui.stkMas = Object.assign({}, S.ui.stkMas, { [d.c]: +d.n }); C.guardar(); C.render(); };
 
   C.acciones['stk-alta'] = () => {
     if (!C.puede('configurar')) return;

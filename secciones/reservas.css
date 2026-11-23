@@ -10,6 +10,18 @@
 .res-modal-lista{margin:0 -24px 16px}
 .res-filas{grid-column:1/-1;display:flex;flex-direction:column;gap:14px}
 .res-pers{padding-top:14px;border-top:1px solid var(--linea-suave)}
+/* Extras: sumar en un toque lo que se llevan de más, con el total a la vista */
+.res-ex-ic{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--hielo);color:var(--noche-2)}
+.res-ex-total{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:2px 12px;padding:14px 16px;margin-bottom:14px;border-radius:var(--r-m);background:var(--hielo)}
+.res-ex-total b{font-size:26px;letter-spacing:-.02em}
+.res-ex-total .muted{grid-column:1/-1;font-size:12.5px}
+.res-ex-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.res-ex-chips button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:10px 12px;border:1px solid var(--linea-fuerte);border-radius:var(--r-m);background:#fff;text-align:left;transition:border-color .15s var(--curva),transform .15s var(--curva)}
+.res-ex-chips button:hover{border-color:var(--noche)}
+.res-ex-chips button:active{transform:scale(.97)}
+.res-ex-chips span{font-size:12.5px;color:var(--noche-3)}
+.res-ex-cant{display:inline-flex;align-items:center;gap:8px}
+.res-ex-cant b{min-width:16px;text-align:center}
 @media (max-width:820px){
   .res-nota,.res-tramo{padding-left:16px;padding-right:16px}
   .res-ret{padding-left:0}

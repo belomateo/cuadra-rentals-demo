@@ -26,6 +26,17 @@
       { tipo: 'Bastones', detalle: '100 a 130 cm', total: 220, alquiladas: 140 },
       { tipo: 'Cascos', detalle: 'S, M y L', total: 180, alquiladas: 96 }
     ],
+    // Lo que se suma en el mostrador a una reserva (precios de ejemplo). «por»: 'día' se cobra por los días de la reserva
+    extras: [
+      { id: 'casco', nombre: 'Casco', precio: 8000, por: 'día' },
+      { id: 'antiparras', nombre: 'Antiparras', precio: 6000, por: 'día' },
+      { id: 'guantes', nombre: 'Guantes', precio: 5000, por: 'día' },
+      { id: 'bastones', nombre: 'Bastones', precio: 4000, por: 'día' },
+      { id: 'botas', nombre: 'Botas', precio: 15000, por: 'día' },
+      { id: 'seguro', nombre: 'Seguro del equipo', precio: 9000, por: 'día' },
+      { id: 'locker', nombre: 'Locker', precio: 7000, por: 'día' },
+      { id: 'clase', nombre: 'Clase con instructor', precio: 65000, por: 'una' }
+    ],
 
     // Grupos: un grupo puede tener varias reservas (los que van los mismos días quedan juntos)
     grupos: [

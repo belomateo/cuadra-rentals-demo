@@ -166,7 +166,9 @@
   C.reservasDe = (grupoId) => S.reservas.filter((r) => r.grupo === grupoId);
   // Persona: {nombre, tipo, gama, nivel, altura, peso, calzado, equipo, pago, contrato, fijacion, devuelto}
   C.montoPersona = (r, p) => C.gama(p.gama).tarifa * r.dias;
-  C.montoReserva = (r) => r.personas.reduce((s, p) => s + C.montoPersona(r, p), 0);
+  // Extra: {id, nombre, precio, por: 'día' | 'una', cant}. Los «por día» se cobran por los días de la reserva
+  C.montoExtra = (r, x) => x.precio * x.cant * (x.por === 'día' ? r.dias : 1);
+  C.montoReserva = (r) => r.personas.reduce((s, p) => s + C.montoPersona(r, p), 0) + (r.extras || []).reduce((s, x) => s + C.montoExtra(r, x), 0);
   C.garantiaReserva = (r) => r.personas.reduce((s, p) => s + C.gama(p.gama).garantia, 0);
   C.contar = (gamaId) => {
     const lista = S.equipos.filter((e) => !gamaId || e.gama === gamaId);
