@@ -5,7 +5,7 @@
 // Las piezas visuales (C.fila, C.panel, C.kpis, C.placa…) están abajo: usarlas siempre, no armar HTML suelto.
 (function () {
   const D = window.DATOS;
-  const CLAVE = 'cuadra-rentals-demo-v2';
+  const CLAVE = 'cuadra-rentals-demo-v3';
   const C = window.CUADRA = { D, V: {}, cab: {}, acciones: {}, formularios: {}, cambios: {} };
   const $ = C.$ = (s, el = document) => el.querySelector(s);
   const esc = C.esc = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -57,7 +57,19 @@
     combi: '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M3 11h18M7 17v2M17 17v2"/>',
     reloj: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
     firma: '<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/>',
-    puntos: '<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>'
+    puntos: '<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
+    // Artículos de la reserva
+    esqui: '<path d="M3 18 15.5 5.5c1.2-1.2 3-1.4 4-.5"/><path d="M6.5 21.5 19 9c1.2-1.2 3-1.4 4-.5"/><path d="m8 13 2 2M11.5 16.5l2 2"/>',
+    snowboard: '<path d="M3.8 17.4 17.4 3.8a2.2 2.2 0 0 1 3.1 3.1L6.9 20.5a2.2 2.2 0 0 1-3.1-3.1Z"/><path d="M7.5 14.5h3M12.5 9.5h3"/>',
+    botas: '<path d="M7 3h6l1 6 4.5 3.5V18H5V9.5Z"/><path d="M4 21h16M7 7h5.5M5 14.5h13.5"/>',
+    casco: '<path d="M3.5 16a8.5 8.5 0 0 1 17 0v1.5h-17Z"/><path d="M10 7.8c1.4 2.4 1.4 5.3.2 8.2"/>',
+    antiparras: '<rect x="3" y="8" width="18" height="8" rx="4"/><path d="M10.5 16 12 14.5l1.5 1.5M3 12H1.5M21 12h1.5"/>',
+    guantes: '<path d="M7.5 21v-3L5 13.5V8a1.5 1.5 0 0 1 3 0V5a1.5 1.5 0 0 1 3 0v-.5a1.5 1.5 0 0 1 3 0V6a1.5 1.5 0 0 1 3 0v7.5L15 18v3"/><path d="M7.5 18H15"/>',
+    bastones: '<path d="M8 3l3 18M16 3l-3 18M7 7.5h2M15 7.5h2"/><circle cx="10.4" cy="17.5" r="1.7"/><circle cx="13.6" cy="17.5" r="1.7"/>',
+    campera: '<path d="M9 3 4 6v13h4M15 3l5 3v13h-4"/><path d="M9 3a3 3 0 0 0 6 0M8 21V11M16 21V11M8 21h8M12 6v15"/>',
+    pantalon: '<path d="M6 3h12l1 18h-5l-2-11-2 11H5Z"/><path d="M6 6.5h12"/>',
+    locker: '<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M12 3v18M9.5 8v2.5M14.5 8v2.5"/>',
+    clase: '<circle cx="12" cy="7" r="3.2"/><path d="M5.5 21v-2.5a6.5 6.5 0 0 1 13 0V21"/>'
   };
   const icono = C.icono = (n, px = 18) => `<svg width="${px}" height="${px}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONOS[n] || ''}</svg>`;
 

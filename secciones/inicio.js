@@ -1,7 +1,7 @@
 // Inicio de Cuadra · Rentals: qué hay que hacer ahora y cómo viene mañana.
 (function (C) {
   const { S, D, esc } = C;
-  const TOPE = 6;
+  const TOPE = 6, HOY = '18/07';
   const min = (hhmm) => { const [h, m] = String(hhmm).split(':'); return +h * 60 + +m; };
   const nPers = (n) => `${n} ${n === 1 ? 'persona' : 'personas'}`;
   const personasDe = (gid) => C.reservasDe(gid).reduce((s, r) => s + r.personas.length, 0);
@@ -62,6 +62,24 @@
         lado: x.faltan ? C.estado(`Faltan ${x.faltan}`, 'alerta') : C.estado('Alcanza', 'ok')
       })).join('')}</div>`
     });
+    // ---- Pruebas de hoy: quién viene a probarse y qué hay que tener preparado ----
+    const pruebas = C.visible('reservas') ? S.reservas.filter((r) => r.estado === 'manana' && r.prueba && r.prueba.dia === HOY).sort((a, b) => min(a.prueba.hora) - min(b.prueba.hora)) : [];
+    const preparar = (r) => {
+      const m = new Map();
+      r.personas.forEach((p) => { const k = `${p.tipo.toLowerCase()} ${C.gama(p.gama).nombre.toLowerCase()}`; m.set(k, (m.get(k) || 0) + 1); });
+      return [...[...m].map(([k, n]) => `${n} ${k}`), ...(r.extras || []).map((x) => `${x.cant} ${(x.cant === 1 ? x.nombre : x.pl || x.nombre).toLowerCase()}`)].join(' · ');
+    };
+    const pruebasP = !pruebas.length ? '' : C.panel({
+      titulo: 'Pruebas de equipos de hoy', sinPad: true,
+      cuerpo: `<div class="lista">${pruebas.map((r) => {
+        const g = C.grupo(r.grupo), listas = r.personas.filter((p) => p.equipo).length;
+        return C.fila({
+          lead: C.icono('reloj', 20), titulo: `${esc(r.prueba.hora)} · ${esc(g ? g.nombre : 'Grupo')}`, meta: `Preparar: ${esc(preparar(r))}`,
+          lado: C.estado(`${listas} de ${r.personas.length} listas`, listas === r.personas.length ? 'ok' : 'aviso'),
+          acc: C.btn('Ver', { accion: 'res-ver', tipo: 'sec', chico: true, data: { id: r.grupo } })
+        });
+      }).join('')}</div>`
+    });
     const transfers = C.panel({
       titulo: 'Transfers de hoy', sinPad: true,
       cuerpo: S.transfers.length ? `<div class="lista">${S.transfers.slice(0, 3).map((t) => C.fila({
@@ -70,7 +88,7 @@
       })).join('')}</div>` : C.vacio('Hoy no hay transfers.')
     });
 
-    return `${kpis}<div class="grid-2">${hacer}<div class="pila ini-pila">${manana}${transfers}</div></div>`;
+    return `${kpis}<div class="grid-2">${hacer}<div class="pila ini-pila">${pruebasP}${manana}${transfers}</div></div>`;
   };
 
   C.acciones['ini-todas'] = () => { S.ui.iniTodas = true; C.guardar(); C.render(); };

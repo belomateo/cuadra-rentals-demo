@@ -83,7 +83,9 @@
       return C.fila({
         titulo: C.marca(g.id),
         meta: `Números ${g.desde} a ${g.hasta} · ${k.total} tablas · ${k.disponible} libres · ${k.alquilado} alquiladas · ${k.taller} en taller<div class="stk-barra">${C.barra(k.disponible, k.total, 'ok')}</div>`,
-        lado: `<span class="num">${plata(g.tarifa)}<span class="muted"> por día</span></span>`
+        lado: `<span class="num">${plata(g.tarifa)}<span class="muted"> por día</span></span>`,
+        // La reserva es aparte del stock, pero se puede arrancar desde acá con esta gama cargada
+        acc: C.puede('reservar') ? C.btn('Reservar', { accion: 'res-nueva', tipo: 'sec', chico: true, data: { pre: `esqui-${g.id}` } }) : ''
       });
     }).join('');
     const acc = D.accesorios.map((a) => C.fila({

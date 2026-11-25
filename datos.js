@@ -26,16 +26,19 @@
       { tipo: 'Bastones', detalle: '100 a 130 cm', total: 220, alquiladas: 140 },
       { tipo: 'Cascos', detalle: 'S, M y L', total: 180, alquiladas: 96 }
     ],
-    // Lo que se suma en el mostrador a una reserva (precios de ejemplo). «por»: 'día' se cobra por los días de la reserva
+    // Lo que se suma a una reserva (precios de ejemplo). «por»: 'día' se cobra por los días de la reserva. ic: dibujo; pl: plural
     extras: [
-      { id: 'casco', nombre: 'Casco', precio: 8000, por: 'día' },
-      { id: 'antiparras', nombre: 'Antiparras', precio: 6000, por: 'día' },
-      { id: 'guantes', nombre: 'Guantes', precio: 5000, por: 'día' },
-      { id: 'bastones', nombre: 'Bastones', precio: 4000, por: 'día' },
-      { id: 'botas', nombre: 'Botas', precio: 15000, por: 'día' },
-      { id: 'seguro', nombre: 'Seguro del equipo', precio: 9000, por: 'día' },
-      { id: 'locker', nombre: 'Locker', precio: 7000, por: 'día' },
-      { id: 'clase', nombre: 'Clase con instructor', precio: 65000, por: 'una' }
+      { id: 'botas', nombre: 'Botas', precio: 15000, por: 'día', ic: 'botas' },
+      { id: 'bastones', nombre: 'Bastones', precio: 4000, por: 'día', ic: 'bastones' },
+      { id: 'casco', nombre: 'Casco', pl: 'Cascos', precio: 8000, por: 'día', ic: 'casco' },
+      { id: 'antiparras', nombre: 'Antiparras', precio: 6000, por: 'día', ic: 'antiparras' },
+      { id: 'guantes', nombre: 'Guantes', precio: 5000, por: 'día', ic: 'guantes' },
+      { id: 'campera', nombre: 'Campera', pl: 'Camperas', precio: 12000, por: 'día', ic: 'campera' },
+      { id: 'pantalon', nombre: 'Pantalón', pl: 'Pantalones', precio: 9000, por: 'día', ic: 'pantalon' },
+      { id: 'transfer', nombre: 'Transfer al cerro', pl: 'Transfers al cerro', precio: 10000, por: 'día', ic: 'combi' },
+      { id: 'seguro', nombre: 'Seguro del equipo', pl: 'Seguros del equipo', precio: 9000, por: 'día', ic: 'garantias' },
+      { id: 'locker', nombre: 'Locker', pl: 'Lockers', precio: 7000, por: 'día', ic: 'locker' },
+      { id: 'clase', nombre: 'Clase con instructor', pl: 'Clases con instructor', precio: 65000, por: 'una', ic: 'clase' }
     ],
 
     // Grupos: un grupo puede tener varias reservas (los que van los mismos días quedan juntos)
@@ -46,7 +49,8 @@
       { id: 'gr4', nombre: 'Familia Gómez', contacto: 'Carolina Gómez', tel: '+54 9 11 5555 0193', origen: 'Buenos Aires', ciudad: 'CABA', canal: 'Mostrador' },
       { id: 'gr5', nombre: 'Amigos de Rosario', contacto: 'Federico Sosa', tel: '+54 9 341 555 0107', origen: 'Zona centro', ciudad: 'Rosario', canal: 'Web' },
       { id: 'gr6', nombre: 'Ana Torres', contacto: 'Ana Torres', tel: '+57 300 555 0161', origen: 'Colombia', ciudad: 'Bogotá', canal: 'Instagram' },
-      { id: 'gr7', nombre: 'Familia Pereyra', contacto: 'Luis Pereyra', tel: '+54 9 261 555 0175', origen: 'Zona centro', ciudad: 'Mendoza', canal: 'Mostrador' }
+      { id: 'gr7', nombre: 'Familia Pereyra', contacto: 'Luis Pereyra', tel: '+54 9 261 555 0175', origen: 'Zona centro', ciudad: 'Mendoza', canal: 'Mostrador' },
+      { id: 'gr8', nombre: 'Grupo Bustamante', contacto: 'Pablo Bustamante', tel: '+54 9 351 555 0129', origen: 'Zona centro', ciudad: 'Córdoba', canal: 'WhatsApp' }
     ],
     // estado: 'en_curso' | 'retira_hoy' | 'devuelve_hoy' | 'manana'. Persona: [nombre, tipo, gama, nivel, altura, peso, calzado, equipo (número o null), pago]
     reservas: [
@@ -72,7 +76,7 @@
         ['Mora Gómez', 'Esquí', 'estandar', 'Principiante', 150, 44, 36, 122, 'Efectivo'],
         ['Thiago Gómez', 'Snowboard', 'estandar', 'Principiante', 158, 50, 38, 123, 'Efectivo'],
         ['Elena Ruiz', 'Esquí', 'estandar', 'Principiante', 160, 66, 37, 124, 'Efectivo']] },
-      { id: 'r6', grupo: 'gr5', desde: '19/07', hasta: '23/07', dias: 5, estado: 'manana', personas: [
+      { id: 'r6', grupo: 'gr5', desde: '19/07', hasta: '23/07', dias: 5, estado: 'manana', prueba: { dia: '18/07', hora: '18:00' }, personas: [
         ['Federico Sosa', 'Esquí', 'premium', 'Intermedio', 179, 78, 43, null, 'Tarjeta'],
         ['Lara Benítez', 'Esquí', 'premium', 'Principiante', 164, 55, 38, null, 'Tarjeta'],
         ['Iván Sosa', 'Snowboard', 'estandar', 'Intermedio', 175, 70, 42, null, 'Tarjeta']] },
@@ -81,7 +85,15 @@
       { id: 'r8', grupo: 'gr7', desde: '18/07', hasta: '20/07', dias: 3, estado: 'retira_hoy', personas: [
         ['Luis Pereyra', 'Esquí', 'estandar', 'Intermedio', 177, 81, 42, null, 'Efectivo'],
         ['Marta Pereyra', 'Esquí', 'estandar', 'Principiante', 161, 59, 38, null, 'Tarjeta'],
-        ['Bruno Pereyra', 'Snowboard', 'estandar', 'Principiante', 155, 48, 37, null, 'Tarjeta']] }
+        ['Bruno Pereyra', 'Snowboard', 'estandar', 'Principiante', 155, 48, 37, null, 'Tarjeta']] },
+      // Reservada por cantidad: los nombres y los talles se completan en la prueba de esta tarde
+      { id: 'r9', grupo: 'gr8', desde: '19/07', hasta: '22/07', dias: 4, estado: 'manana', prueba: { dia: '18/07', hora: '19:30' }, personas: [
+        ['Persona 1', 'Esquí', 'premium', '', null, null, null, null, 'Pendiente'],
+        ['Persona 2', 'Esquí', 'premium', '', null, null, null, null, 'Pendiente'],
+        ['Persona 3', 'Esquí', 'premium', '', null, null, null, null, 'Pendiente'],
+        ['Persona 4', 'Esquí', 'premium', '', null, null, null, null, 'Pendiente'],
+        ['Persona 5', 'Snowboard', 'estandar', '', null, null, null, null, 'Pendiente'],
+        ['Persona 6', 'Snowboard', 'estandar', '', null, null, null, null, 'Pendiente']] }
     ],
     // Gente en el local esperando, por orden de llegada (por grupo: no se intercalan)
     espera: [['gr2', '09:20'], ['gr6', '09:35'], ['gr7', '09:41']],
@@ -238,13 +250,17 @@
   const obj = (campos, a) => Object.fromEntries(campos.map((c, i) => [c, a[i]]));
   // Contrato: firmado online (web) o en la tablet al retirar. Fijaciones: las ajusta el técnico al entregar la tabla.
   const FIRMO_ONLINE = { r2: [0, 1], r3: [0, 1], r6: [0, 1, 2], r7: [0] };
+  // Reservas hechas por cantidad: cada lugar es «Persona N» hasta que se completa en la prueba
+  const POR_COMPLETAR = { r9: [['botas', 6], ['casco', 6], ['guantes', 6], ['campera', 6], ['transfer', 6]] };
   D.reservas.forEach((r) => {
     r.personas = r.personas.map((a, k) => {
       const p = obj(['nombre', 'tipo', 'gama', 'nivel', 'altura', 'peso', 'calzado', 'equipo', 'pago'], a);
       p.contrato = !!p.equipo || (FIRMO_ONLINE[r.id] || []).includes(k);
       p.fijacion = !!p.equipo; p.devuelto = false;
+      if (POR_COMPLETAR[r.id]) p.porCompletar = true;
       return p;
     });
+    if (POR_COMPLETAR[r.id]) r.extras = POR_COMPLETAR[r.id].map(([id, cant]) => Object.assign({ cant }, D.extras.find((x) => x.id === id)));
   });
   D.audioEjemplo.personas = D.audioEjemplo.personas.map((a) => obj(['nombre', 'tipo', 'gama', 'nivel'], a));
   D.espera = D.espera.map(([grupo, llegada]) => ({ grupo, llegada }));
